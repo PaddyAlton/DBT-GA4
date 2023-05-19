@@ -1,0 +1,95 @@
+version: 2
+
+models:
+
+  # please see https://support.google.com/firebase/answer/7029846?hl=en for a full description of
+  # the heavily nested GA4 BigQuery Export schema.
+  - name: base_analytics__events
+    description: "Date-partitioned based table in which all GA4 analytics data is unified"
+    columns:
+      - name: event_id
+        description: >
+          Surrogate key generated for each unique combination of
+          (event_timestamp, event_name, client_id, event_params)
+        tests:
+          - not_null
+          - unique
+      - name: event_date
+        description: "Date - the partioning key for the base table"
+        tests:
+          - not_null
+      - name: event_timestamp
+        description: "Date and time at which the event took place"
+        tests:
+          - not_null
+      - name: event_name
+        description: >
+          The type of event that took place (over ten possibilities -
+          common values: page_view, track_clicks
+        tests:
+          - not_null
+      - name: event_params
+        description: >
+          Structure containing { key, value }; 'value' has four sub-fields to accommodate
+          different value data-types
+      - name: event_previous_timestamp
+        description: "Timestamp of the preceding event, where known (typically NULL)"
+      - name: event_value_in_usd
+        description: "Not used (intended for ecommerce)"
+      - name: event_bundle_sequence_id
+        description: "The sequential ID of the bundle in which these events were uploaded"
+      - name: event_server_timestamp_offset
+        description: "Timestamp offset between collection time and upload time in microseconds"
+      - name: is_logged_in
+        description: "Indicates whether a user was logged-in or not when the event was generated"
+        tests:
+          - not_null
+          - is_boolean
+      - name: user_id
+        description: "Identifies a (logged-in) platform user, or '0' if they were logged out"
+        tests:
+          - not_null
+      - name: client_id
+        description: "Cookie-based identifier for an individual"
+        tests:
+          - not_null
+      - name: privacy_info
+        description: >
+          Structure { analytics_storage, ads_storage, users_transient_token } intended
+          to be populated when GA4 is used with 'consent mode' active
+      - name: user_properties
+        description: "user_properties"
+      - name: user_first_touch_timestamp
+        description: >
+          The time (in microseconds) at which the user first opened the app or visited the site.
+      - name: user_ltv
+        description: >
+          A record of Lifetime Value information about the user.
+          This field is only available in next-day data.
+      - name: device
+        description: >
+          Structure with many fields detailing various information about
+          the device used during the session
+      - name: geo
+        description: >
+          Structure recording user geographic information
+          { continent, sub_continent, country, region, metro, city }
+          derived from visitor IP address"
+      - name: app_info
+        description: "Structure containing App version/install information (irrelevant to us)"
+      - name: traffic_source
+        description: >
+          Structure { name (campaign), medium, source }.
+          This field is only available in next-day data.
+      - name: stream_id
+        description: "Numeric ID of the data stream"
+      - name: platform
+        description: "The platform on which the app was built"
+      - name: event_dimensions
+        description: "Structure containing only one field, hostname (irrelevant to us)"
+      - name: ecommerce
+        description: "Structure containing ecommerce information (irrelevant to us)"
+      - name: items
+        description: >
+          Structure containing information about items associated with the event
+          (more ecommerce information; irrelevant to us)

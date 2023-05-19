@@ -1,0 +1,61 @@
+version: '3'
+
+vars:
+
+  DBT_IMAGE_TAG: local/dbt:latest
+  USER_NAME:
+    sh: echo $USER
+  USER_GID:
+    sh: id -g $USER
+  USER_UID:
+    sh: id -u $USER
+  WORKING_DIRECTORY:
+    sh: pwd
+
+tasks:
+
+  build_img:
+    cmds:
+      - |
+        docker build --tag {{.DBT_IMAGE_TAG}} \
+            --build-arg USER_NAME={{.USER_NAME}} \
+            --build-arg USER_GID={{.USER_GID}} \
+            --build-arg USER_UID={{.USER_UID}} \
+            .
+
+  start:
+    cmds:
+      - |
+        docker run -it --rm \
+            --name dbt-myproject \
+            --env DBT_EXEC_PROFILE=dev \
+            --volume {{.WORKING_DIRECTORY}}/config:/config \
+            --volume {{.WORKING_DIRECTORY}}/my_project:/dbt_project \
+            --volume dbt_packages_volume:/dbt_project/dbt_packages \
+            --entrypoint /bin/bash \
+            {{.DBT_IMAGE_TAG}}
+
+  build_docs:
+    cmds:
+      - |
+        docker run -it --rm \
+            --name dbt-docsbuilder \
+            --env DBT_EXEC_PROFILE=dev \
+            --volume {{.WORKING_DIRECTORY}}/config:/config \
+            --volume {{.WORKING_DIRECTORY}}/my_project:/dbt_project \
+            --volume dbt_packages_volume:/dbt_project/dbt_packages \
+            {{.DBT_IMAGE_TAG}} \
+            docs generate
+
+  serve_docs:
+    cmds:
+      - |
+        docker run -it --rm \
+            --name dbt-docs \
+            --env DBT_EXEC_PROFILE=dev \
+            --volume {{.WORKING_DIRECTORY}}/config:/config \
+            --volume {{.WORKING_DIRECTORY}}/my_project:/dbt_project \
+            --volume dbt_packages_volume:/dbt_project/dbt_packages \
+            --publish 8123:8123 \
+            {{.DBT_IMAGE_TAG}} \
+            docs serve --port 8123

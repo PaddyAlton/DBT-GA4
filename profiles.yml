@@ -1,0 +1,32 @@
+# profiles.yml
+# information for our DBT runs on BigQuery
+# https://docs.getdbt.com/reference/warehouse-profiles/bigquery-profile
+
+# TODO: add a test for integration test environment
+# TODO: use different credentials for dev and prod
+my_project:
+  outputs:
+
+    dev: 
+      type: bigquery
+      project: <your-project-id>
+      location: EU
+      method: service-account
+      keyfile: /config/credentials.json
+      priority: interactive
+      fixed_retries: 1
+      threads: 1
+      timeout_seconds: 300
+
+    prod: 
+      type: bigquery
+      project: <your-project-id>
+      location: EU
+      method: service-account
+      keyfile: /config/credentials.json
+      priority: interactive
+      fixed_retries: 1
+      threads: 1
+      timeout_seconds: 300
+
+  target: "{{ env_var('DBT_EXEC_PROFILE') }}" 

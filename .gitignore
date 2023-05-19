@@ -1,0 +1,12 @@
+*credentials*
+!*.example
+.env
+.vscode/
+
+# dbt generated
+my_project/target/
+my_project/dbt_packages/
+my_project/logs/
+logs/
+
+.DS_Store

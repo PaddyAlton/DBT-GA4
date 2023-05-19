@@ -1,0 +1,15 @@
+version: 2
+
+macros:
+
+### generate_schema_name
+  - name: generate_schema_name
+    description: >
+      Overrides builtin generate_schema_name to create custom schema/environment targets
+    arguments:
+      - name: custom_schema_name
+        description: >
+          The configured value of schema in the specified node, or none if a value is not supplied
+      - name: node
+        description: >
+          The node that is currently being processed by DBT

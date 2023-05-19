@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+
+  - name: google_analytics
+    description: "Google Analytics 4 export"
+    database: project-id
+    schema: analytics_111111111
+    tables:
+      - name: events
+        identifier: events_*
+        loaded_at_field: "parse_timestamp(_table_suffix, '%Y%m%d')"
+        freshness:
+          warn_after:
+            count: 24
+            period: hour
+          error_after:
+            count: 36
+            period: hour

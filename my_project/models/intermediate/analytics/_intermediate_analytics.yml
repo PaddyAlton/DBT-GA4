@@ -1,0 +1,152 @@
+version: 2
+
+models:
+
+  - name: intermediate_analytics__events_params
+    description: >
+      Date-partitioned table in which all GA4 analytics data is unified, reduced to essential
+      fields, and unnested (so the grain of this table is at the event-parameter level and the
+      param_id, not the event_id, is the unique key)
+    columns:
+      - name: param_id
+        description: >
+          Surrogate key generated from the event_id and param_key
+        tests:
+          - not_null
+          - unique
+      - name: event_id
+        description: >
+          Unique identifier for a particular GA4 event
+        tests:
+          - not_null
+          - unique
+      - name: event_date
+        description: "Date - the partioning key for the base table"
+        tests:
+          - not_null
+      - name: event_timestamp
+        description: "Date and time at which the event took place"
+        tests:
+          - not_null
+      - name: client_id
+        description: "Cookie-based identifier for an individual"
+        tests:
+          - not_null
+      - name: user_id
+        description: "Identifies a user"
+        tests:
+          - not_null
+      - name: event_name
+        description: "The type of event that took place"
+        tests:
+          - not_null
+      - name: continent
+        description: "Continent the visitor is based in (identified via IP address)"
+      - name: country
+        description: "Country the visitor is based in (identified via IP address)"
+      - name: device_type
+        description: "Type of device being used by the visitor (desktop, mobile, or tablet)"
+        tests:
+          - accepted_values:
+              values: [desktop, mobile, tablet]
+      - name: browser
+        description: "Browser the visitor was using (over 100 possible values)"
+      - name: operating_system
+        description: "Operating system the visitor was using (over 20 possible values)"
+      - name: traffic_source
+        description: >
+          The acquisition channel for this sessions (thousands of possible values);
+          the name of the network that first acquired the visitor.
+      - name: traffic_campaign
+        description: "Name of the marketing campaign that first acquired the visitor"
+      - name: traffic_medium
+        description: >
+          Name of the medium (organic search, email, etc.) that first acquired the visitor
+      - name: param_key
+        description: >
+          Lookup key for the parameter (indicates the type of parameter represented by this record)
+        tests:
+          - not_null
+      - name: param_value
+        description: "Value of the parameter denoted by param_key"
+
+
+  - name: intermediate_analytics__events_wide_format
+    description: >
+      In this model, each row records a specific GA4 event. Important event parameters have been
+      pivoted into new columns, giving a flat record of the event that contains all important
+      information for the target site.
+    columns:
+      - name: event_id
+        description: >
+          Unique identifier for a particular GA4 event
+        tests:
+          - not_null
+          - unique
+      - name: event_date
+        description: "Date - the partioning key for the base table"
+        tests:
+          - not_null
+      - name: event_timestamp
+        description: "Date and time at which the event took place"
+        tests:
+          - not_null
+      - name: client_id
+        description: "Cookie-based identifier for an individual"
+        tests:
+          - not_null
+      - name: user_id
+        description: "Identifies a user"
+        tests:
+          - not_null
+      - name: event_name
+        description: >
+          The type of event that took place (over ten possibilities -
+          common values: page_view, track_clicks
+        tests:
+          - not_null
+      - name: continent
+        description: "Continent the visitor is based in (identified via IP address)"
+      - name: country
+        description: "Country the visitor is based in (identified via IP address)"
+      - name: device_type
+        description: "Type of device being used by the visitor (desktop, mobile, or tablet)"
+        tests:
+          - accepted_values:
+              values: [desktop, mobile, tablet]
+      - name: browser
+        description: "Browser the visitor was using (over 100 possible values)"
+      - name: operating_system
+        description: "Operating system the visitor was using (over 20 possible values)"
+      - name: traffic_source
+        description: >
+          The acquisition channel for this sessions (thousands of possible values);
+          the name of the network that first acquired the visitor.
+      - name: traffic_campaign
+        description: "Name of the marketing campaign that first acquired the visitor"
+      - name: traffic_medium
+        description: >
+          Name of the medium (organic search, email, etc.) that first acquired the visitor
+      - name: session_id
+        description: >
+          Identifier for a particular analytics session associated with a particular Client ID
+        tests:
+          - not_null
+          - unique
+      - name: page_location
+        description: >
+          The full URL associated with the event, including protocol, domain, path,
+          query parameters and fragments
+      - name: traffic_source
+        description: >
+          The acquisition channel for this sessions (thousands of possible values);
+          the name of the network that first acquired the visitor.
+      - name: traffic_campaign
+        description: "Name of the marketing campaign that first acquired the visitor"
+      - name: traffic_medium
+        description: >
+          Name of the medium (organic search, email, etc.) that first acquired the visitor
+      - name: traffic_referrer
+        description: >
+          Granular information (from utm_content) about the campaign that first acquired the
+          visitor (usually a specific referral within a wider campaign)
