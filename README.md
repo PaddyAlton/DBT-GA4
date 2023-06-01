@@ -7,6 +7,8 @@ Do you use Google Analytics 4, BigQuery, and DBT?
 
 You may or may not know that GA4 provides the ability to stream event-level data into BigQuery. If you didn't know that, [here are instructions](https://support.google.com/analytics/answer/9823238) for linking your GA4 data to your BigQuery instance.
 
+This repository has [an accompanying article](https://paddyalton.medium.com/how-to-use-dbt-with-bigquery-to-wrangle-your-google-analytics-data-9aedee6cce5), which you can read for additional information.
+
 The GA4 Export
 --------------
 
