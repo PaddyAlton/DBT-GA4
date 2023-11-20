@@ -61,7 +61,7 @@ You will need to fill out `profiles.yml` appropriately and add appropriate servi
 I've included some boilerplate infrastructure. To make the most of this you will need to install [Docker](https://docs.docker.com/get-docker/) and [Taskfile](https://taskfile.dev/installation/) (for this purpose - i.e running one-off, interactive tasks rather than a persistent application - I prefer this to Docker Compose).
 
 If you do this, you should be able to do:
-- `task build_image` to build an image for the DBT project
+- `task build_img` to build an image for the DBT project
 - `task start` to run a shell inside that image (you can then execute `dbt run` commands interactively) with volume mounting keeping your models up to date
 - `task build_docs` to build the DBT documentation site
 - `task serve_docs` to serve the DBT documentation site (after building it!) on `localhost:8123`
