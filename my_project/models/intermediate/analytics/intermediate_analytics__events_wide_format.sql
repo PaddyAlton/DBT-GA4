@@ -46,7 +46,7 @@
              DISTINCT -- ensure we get just one row per event in the pivot output
                    * EXCEPT(param_id)
                  FROM
-                   {{ ref('intermediate_analytics__events_with_params') }}
+                   {{ ref('intermediate_analytics__events_params') }}
 {% if is_incremental() %}
                 WHERE -- in incremental mode, add/replace data from last daily partition onwards:
                       event_date >= DATE(_dbt_max_partition)
