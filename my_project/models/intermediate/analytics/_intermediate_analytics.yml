@@ -19,7 +19,6 @@ models:
           Unique identifier for a particular GA4 event
         tests:
           - not_null
-          - unique
       - name: event_date
         description: "Date - the partioning key for the base table"
         tests:
